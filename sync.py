@@ -5,8 +5,8 @@ Forge Prep · Artifacts — pull the latest source HTML into the repo, then rebu
 The shareable pages here are COPIES of "source of truth" HTML files that live
 elsewhere on disk (the DLA/Meetings/audios working folders) and get updated
 often. This script re-copies the latest version of each mapped source into its
-repo location, skipping anything that hasn't changed, then regenerates the
-navigation via build.py.
+repo location, injects a noindex tag (the site is public but search-hidden),
+skips anything already up to date, then regenerates the navigation via build.py.
 
 The source map lives in sources.local.json (git-ignored, machine-specific), so
 local file paths never get committed.
@@ -16,18 +16,26 @@ local file paths never get committed.
 
 from __future__ import annotations
 
-import hashlib
 import json
-import shutil
+import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 MAP = ROOT / "sources.local.json"
 
+NOINDEX = '<meta name="robots" content="noindex, nofollow">'
 
-def sha(p: Path) -> str:
-    return hashlib.sha256(p.read_bytes()).hexdigest()
+
+def inject_noindex(html: str) -> str:
+    """Add a noindex meta right after <head>. Idempotent — safe to run repeatedly."""
+    if NOINDEX in html:
+        return html
+    m = re.search(r"<head[^>]*>", html, re.IGNORECASE)
+    if m:
+        i = m.end()
+        return html[:i] + "\n" + NOINDEX + html[i:]
+    return NOINDEX + "\n" + html  # no <head> — prepend as a fallback
 
 
 def main() -> int:
@@ -48,12 +56,17 @@ def main() -> int:
             missing.append(m["src"])
             print(f"  MISSING SRC  {m['dest']}  <-  {m['src']}")
             continue
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        if dest.is_file() and sha(dest) == sha(src):
+
+        # Final desired content = latest source + noindex tag.
+        final = inject_noindex(src.read_text(encoding="utf-8"))
+        current = dest.read_text(encoding="utf-8") if dest.is_file() else None
+
+        if current == final:
             unchanged += 1
             print(f"  ok           {m['dest']}")
         else:
-            shutil.copy2(src, dest)
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(final, encoding="utf-8")
             changed += 1
             print(f"  UPDATED      {m['dest']}")
 
