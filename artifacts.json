@@ -1,0 +1,17 @@
+{
+  "site": {
+    "title": "Forge Prep · Artifacts",
+    "tagline": "Shareable one-pagers, playbooks, and references for the Forge Prep team. Send a link, not an attachment.",
+    "brandWordmark": "Forge Prep",
+    "repoUrl": "https://github.com/rtusiime/forge-artifacts"
+  },
+  "artifacts": [
+    {
+      "slug": "decouple-math",
+      "title": "Decouple Math",
+      "summary": "The full illustrated walkthrough making the case for decoupling math placement from grade level — the team-facing version.",
+      "tags": ["math", "scheduling", "strategy"],
+      "updated": "2026-08-09"
+    }
+  ]
+}
