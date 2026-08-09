@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Forge Math Threads Map",
+  "schemaVersion": 1,
+  "description": "Forge fall math threads by challenge and grade band (Uniforms/Gardens/St. Hubert's, 5-6 and 7-8), color-coded to the spine, with ratio-ladder ownership and a proposed Eureka-module split across challenges. Reference map for math coherence sequencing.",
+  "mcpTools": [],
+  "mcpServerNames": []
+}
+</script>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forge Fall Math Threads — by Challenge & Grade Band</title>
+<style>
+  :root{
+    --number:#f2e2a2; --numberT:#7a6410;
+    --geo:#b3cbe6; --geoT:#234a73;
+    --ratio:#cdbade; --ratioT:#5b3d80;
+    --expr:#f2cda0; --exprT:#8a5316;
+    --stats:#e6b0b0; --statsT:#8a2f2f;
+    --ink:#1f2430; --mut:#5b6472; --line:#e2e6ee; --bg:#f6f7fb; --card:#fff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:28px 20px 60px}
+  .wrap{max-width:1120px;margin:0 auto}
+  h1{font-size:24px;margin:0 0 4px}
+  .sub{color:var(--mut);margin:0 0 20px;font-size:14px}
+  h2{font-size:15px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);margin:34px 0 12px;border-bottom:1px solid var(--line);padding-bottom:6px}
+  .key{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px}
+  .key span{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+  .k-number{background:var(--number);color:var(--numberT)}
+  .k-geo{background:var(--geo);color:var(--geoT)}
+  .k-ratio{background:var(--ratio);color:var(--ratioT)}
+  .k-stats{background:var(--stats);color:var(--statsT)}
+  .k-expr{background:var(--expr);color:var(--exprT)}
+  .rolekey{font-size:12px;color:var(--mut);margin:0 0 22px}
+  .rolekey b{color:var(--ink)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;box-shadow:0 1px 2px rgba(20,30,50,.04)}
+  .card h3{margin:0 0 2px;font-size:16px}
+  .card .band{font-size:12px;color:var(--mut);margin:0 0 12px}
+  .thread{margin:10px 0}
+  .thread .tl{font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;margin:0 0 5px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:12px;padding:4px 8px;border-radius:8px;line-height:1.25;border:1.5px solid transparent;white-space:nowrap}
+  .chip b{font-weight:700}
+  .chip small{opacity:.7;font-weight:500}
+  /* thread colors */
+  .t-ratio .tl{color:var(--ratioT)} .t-ratio .chip{background:var(--ratio);color:var(--ratioT)}
+  .t-stats .tl{color:var(--statsT)} .t-stats .chip{background:var(--stats);color:var(--statsT)}
+  .t-geo   .tl{color:var(--geoT)}   .t-geo   .chip{background:var(--geo);color:var(--geoT)}
+  .t-number .tl{color:var(--numberT)} .t-number .chip{background:var(--number);color:var(--numberT)}
+  /* role treatments via border/opacity */
+  .r-intro{border-color:rgba(0,0,0,.35);font-weight:600}
+  .r-retrieve{background:transparent!important;border-style:dashed;border-color:currentColor;opacity:.9}
+  .r-apply{opacity:.72}
+  .r-stretch{border-style:dotted;border-color:currentColor}
+  .r-gate{background:#eef0f4!important;color:#555!important;border-color:#d3d8e0}
+  .flag{color:#b23b2e;font-weight:700}
+  .note{font-size:12px;color:var(--mut);margin-top:8px;border-top:1px dashed var(--line);padding-top:7px}
+  .anchor{font-size:12px;margin-top:9px;color:var(--mut)}
+  .anchor b{color:var(--ink)}
+  /* ladder + module strips */
+  .ladder{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:6px 0 4px}
+  .rung{flex:1;min-width:150px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--ratioT);border-radius:10px;padding:9px 11px}
+  .rung .c{font-weight:700;font-size:13px;color:var(--ratioT)}
+  .rung .who{font-size:12px;color:var(--mut);margin-top:2px}
+  .rung .who b{color:var(--ink)}
+  table.mod{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  table.mod th,table.mod td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.mod th{background:#eef1f6;font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut)}
+  table.mod tr:last-child td{border-bottom:none}
+  .pill{display:inline-block;font-size:11px;padding:2px 7px;border-radius:12px;background:var(--ratio);color:var(--ratioT);font-weight:600}
+  .foot{font-size:12px;color:var(--mut);margin-top:26px;border-top:1px solid var(--line);padding-top:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Forge Fall Math Threads — by Challenge &amp; Grade Band</h1>
+  <p class="sub">What each challenge actually teaches, in lesson order, tagged to the spine. Standards pulled from the current curriculum maps (Uniforms <code>ss_data</code> v1.x, St. Hubert's S&amp;S docx, Gardens built lessons). 2026-07-20.</p>
+
+  <div class="key">
+    <span class="k-ratio">Ratio / Rate / Proportion (·RP)</span>
+    <span class="k-stats">Data / Statistics (·SP, DL)</span>
+    <span class="k-geo">Geometry / Measurement (·G, ·MD)</span>
+    <span class="k-number">Number / Fluency (·NS, ·NF)</span>
+  </div>
+  <p class="rolekey"><b>Roles:</b> <b>INTRO</b> = first teach · <span style="border:1.5px dashed #888;padding:0 5px;border-radius:6px">RETRIEVE</span> = re-surface from an earlier challenge · <span style="opacity:.6">APPLY</span> = use, no new teach · <span style="border:1.5px dotted #888;padding:0 5px;border-radius:6px">STRETCH</span> = above-band tier · <span style="background:#eef0f4;color:#555;padding:0 5px;border-radius:6px">GATE</span> = fluency/transfer check. <span class="flag">Red</span> = the tag or role I'm flagging.</p>
+
+  <h2>The five challenge · band panels</h2>
+  <div class="grid">
+
+    <!-- UNIFORMS 5/6 -->
+    <div class="card">
+      <h3>Uniforms — 5/6</h3>
+      <p class="band">Runs from term start · in parallel with Gardens</p>
+      <div class="thread t-ratio"><div class="tl">Ratio / Rate / Proportion</div><div class="chips">
+        <span class="chip r-intro"><b>1.B.1</b> 6.RP.A.1 <small>ratio (vote share)</small></span>
+        <span class="chip r-intro"><b>1.B.2</b> 6.RP.A.1 <small>ratio language</small></span>
+        <span class="chip r-intro"><b>1.B.3</b> 6.RP.A.3 <small>fractions→percent (part/whole)</small></span>
+        <span class="chip r-apply"><b>6.D.1</b> 6.RP.A.3 <small>% shift</small></span>
+        <span class="chip r-stretch"><b>6.D.2</b> 7.RP.A.3 <small>% change (top tier)</small></span>
+      </div></div>
+      <div class="thread t-stats"><div class="tl">Data / Statistics</div><div class="chips">
+        <span class="chip r-intro"><b>4.D.1</b> 6.SP.B.4 <small>displays</small></span>
+        <span class="chip r-intro"><b>4.C.2 / 4.D.1</b> 6.SP.B.5 <small>summarize</small></span>
+        <span class="chip r-intro"><b>5.C.1</b> 6.SP.B.5 <small>mean/median</small></span>
+        <span class="chip r-intro"><b>5.C.2/5.C.3</b> 6.SP.A.3 <small>variability/outlier</small></span>
+      </div></div>
+      <div class="thread t-number"><div class="tl">Number / Fluency</div><div class="chips">
+        <span class="chip r-apply"><b>5.B.1</b> 6.NS.B.3 <small>decimal ops (budget)</small></span>
+      </div></div>
+      <div class="anchor">Eureka anchor: <b>G6 M1</b> (ratios/percent) + <b>G6 M6</b> (statistics)</div>
+      <div class="note"><span class="flag">Gap:</span> 6.SP.A.1/A.2 (statistical question, center/spread/shape) never taught — displays &amp; mean land without the distribution frame. <span class="flag">Missing:</span> a clean <b>6.RP.A.2 unit-rate</b> block.</div>
+    </div>
+
+    <!-- GARDENS 5/6 -->
+    <div class="card">
+      <h3>Gardens — 5/6 only</h3>
+      <p class="band">Runs from term start · in parallel with Uniforms</p>
+      <div class="thread t-geo"><div class="tl">Geometry / Measurement <span style="font-weight:500;text-transform:none">(the home)</span></div><div class="chips">
+        <span class="chip r-intro"><b>1.A.3</b> 5.MD.A.1 <small>unit conversion</small></span>
+        <span class="chip r-retrieve"><b>1.B.1</b> 3–4.MD <small>area/perimeter review</small></span>
+        <span class="chip r-intro"><b>1.B.1</b> 6.G.A.1 <small>area by decomposition</small></span>
+        <span class="chip r-intro"><b>1.B.2</b> 5.G.A.1/A.2 <small>coordinate plane</small></span>
+        <span class="chip r-apply"><b>1.B.2</b> 6.G.A.3 <small>polygons on grid</small></span>
+      </div></div>
+      <div class="thread t-ratio"><div class="tl">Ratio / Rate (applied)</div><div class="chips">
+        <span class="chip r-apply"><b>Act 4</b> 6.RP.A.1 <small>space-per-plant</small></span>
+        <span class="chip r-apply"><b>Act 4</b> 6.RP.A.2 <small>yield-per-plant, plants-per-bed</small></span>
+      </div></div>
+      <div class="anchor">Eureka anchor: <b>G6 M5</b> (area/surface/volume) + <i>applies</i> G6 M1 ratios</div>
+      <div class="note">Gardens is the only measurement/geometry home — <b>no overlap conflict</b> except it currently claims to <i>first-teach</i> ratios (README). Act 4 should read <b>apply</b>, not intro. Act 4 ratio work is untagged in the concept map.</div>
+    </div>
+
+    <!-- ST HUBERT'S 5/6 -->
+    <div class="card">
+      <h3>St. Hubert's — 5/6</h3>
+      <p class="band">Runs after Uniforms</p>
+      <div class="thread t-ratio"><div class="tl">Ratio / Rate — the core new learning</div><div class="chips">
+        <span class="chip r-retrieve"><b>1.C.0</b> 5.NF.B.3 <small>fraction fluency</small></span>
+        <span class="chip r-intro"><b>1.C.1</b> <span class="flag">7.RP.A.3</span> <small>rate-per-one / % vs #</small></span>
+        <span class="chip r-intro"><b>1.C.2</b> 6.RP.A.2 <small>adoption rate</small></span>
+        <span class="chip r-apply"><b>1.D.2</b> <span class="flag">7.RP.A.3</span> <small>compare by rate</small></span>
+      </div></div>
+      <div class="thread t-stats"><div class="tl">Data / Statistics</div><div class="chips">
+        <span class="chip r-retrieve"><b>1.B.1–1.B.4</b> 6.SP.B.4 <small>read displays</small></span>
+        <span class="chip r-intro"><b>1.B.5</b> 6.SP.B.4 <small>line graph (new)</small></span>
+        <span class="chip r-apply"><b>4.C.0–4.D.2</b> 6.SP.B.5 <small>summarize survey</small></span>
+      </div></div>
+      <div class="anchor">Eureka anchor: <b>tail of G6 M1</b> (unit rate) + applies G6 M6</div>
+      <div class="note"><b>5/6 St. Hubert's = drill 6.RP.A.2 (unit rate)</b> on adoption data + <i>retrieve</i> displays from Uniforms (only 1.B.5 line graph is new). <span class="flag">Retag</span> 1.C.1 / 1.D.2 from 7.RP.A.3 → their true in-band level (6.RP.A.2 / 6.RP.A.3).</div>
+    </div>
+
+    <!-- ST HUBERT'S 7/8 -->
+    <div class="card">
+      <h3>St. Hubert's — 7/8</h3>
+      <p class="band">Runs after Uniforms · the heaviest band</p>
+      <div class="thread t-ratio"><div class="tl">Proportion (the ceiling — only place it lives)</div><div class="chips">
+        <span class="chip r-intro"><b>1.B.1</b> 7.RP.A.2 <small>rate / proportion</small></span>
+        <span class="chip r-apply"><b>4.A.1/4.B</b> 7.RP.A.3 <small>cost model, %</small></span>
+        <span class="chip r-apply"><b>4.A.2</b> 7.RP.A.2 <small>what scales w/ size</small></span>
+      </div></div>
+      <div class="thread t-stats"><div class="tl">Statistics / Inference</div><div class="chips">
+        <span class="chip r-intro"><b>1.A.3</b> 7.SP.B.3/B.4 <small>distributions</small></span>
+        <span class="chip r-intro"><b>1.A.4</b> 8.SP.A.1/A.2 <small>scatter/line</small></span>
+        <span class="chip r-stretch"><b>1.A.4</b> 8.SP.A.3 <small>slope</small></span>
+        <span class="chip r-retrieve"><b>1.B.3/1.C.1</b> 6.SP.B.5 <small>displays</small></span>
+        <span class="chip r-apply"><b>2.C.2/2.D.2</b> 7.SP.B.3 <small>overlap</small></span>
+      </div></div>
+      <div class="thread t-geo"><div class="tl">Geometry (photo standard)</div><div class="chips">
+        <span class="chip r-intro"><b>5.B.1</b> 7.G.A.1 <small>angle/scale</small></span>
+        <span class="chip r-apply"><b>5.B.2/5.B.3</b> 7.G.A.1 <small>perspective, frame</small></span>
+      </div></div>
+      <div class="anchor">Eureka anchor: <b>G7 M1</b> (prop) + <b>G7 M5</b> / <b>G8 M6</b> (stats, bivariate) + <b>G7 M6</b> (geometry)</div>
+      <div class="note"><span class="flag">Watch:</span> 8.SP scatter rides on slope (8.EE.B.6) never taught → keep association-only, slope = STRETCH (already labeled). This band alone carries proportion + inference + geometry.</div>
+    </div>
+
+    <!-- UNIFORMS 7/8 -->
+    <div class="card">
+      <h3>Uniforms — 7/8</h3>
+      <p class="band">Runs from term start</p>
+      <div class="thread t-ratio"><div class="tl">Ratio / Rate / Proportion</div><div class="chips">
+        <span class="chip r-retrieve"><b>1.B.1</b> 6.RP.A.3 <small>% review</small></span>
+        <span class="chip r-intro"><b>3.C.1</b> 7.RP.A.3 <small>weighted scoring</small></span>
+        <span class="chip r-apply"><b>4.B.1 / 5.C.2</b> 7.RP.A.3 <small>score, re-score</small></span>
+      </div></div>
+      <div class="thread t-stats"><div class="tl">Data / Statistics</div><div class="chips">
+        <span class="chip r-intro"><b>2.C.1</b> 8.SP.A.1 <small>association (Long Beach)</small></span>
+        <span class="chip r-intro"><b>5.C.1</b> 7.SP.A.1/A.2 <small>sampling / inference</small></span>
+      </div></div>
+      <div class="thread t-number"><div class="tl">Number / Fluency</div><div class="chips">
+        <span class="chip r-retrieve"><b>5.A.1/5.A.2</b> 7.NS.A.3 <small>rational ops (cost)</small></span>
+      </div></div>
+      <div class="anchor">Eureka anchor: <b>G7 M1</b> (early prop) + <b>G7 M5</b> (stats) + <b>G7 M4</b> (percent, light)</div>
+      <div class="note"><span class="flag">Overlap:</span> 8.SP.A.1 scatter is introduced here <i>and</i> in St. Hubert's 7/8 1.A.4 — one should introduce, the other extend.</div>
+    </div>
+
+  </div>
+
+  <h2>The ratio→proportion ladder — who owns which rung</h2>
+  <div class="ladder">
+    <div class="rung"><div class="c">6.RP.A.1 ratio</div><div class="who"><b>Uniforms</b> (5/6) · intro</div></div>
+    <div class="rung"><div class="c">6.RP.A.2 unit rate</div><div class="who"><b>St. Hubert's 5/6</b> · drill (the waist node) · Gardens applies</div></div>
+    <div class="rung"><div class="c">6.RP.A.3 percent</div><div class="who"><b>Uniforms</b> (5/6) · intro (part/whole)</div></div>
+    <div class="rung"><div class="c">7.RP.A.2 proportion</div><div class="who"><b>St. Hubert's 7/8</b> · intro (only home)</div></div>
+    <div class="rung"><div class="c">7.RP.A.3 multistep %</div><div class="who"><b>St. Hubert's 7/8</b> cost model · <b>Lunch?</b> for depth</div></div>
+  </div>
+  <p class="rolekey" style="margin-top:10px">Key move: <b>5/6 drills 6.RP.A.2</b> (in-band, most load-bearing node in the spine); <b>7/8 does 7.RP.A.2</b>. Not two 7.RP.A.2 strands — one per band, developmentally placed.</p>
+
+  <h2>Proposed: split the Eureka ratio modules across challenges</h2>
+  <table class="mod">
+    <tr><th>Eureka module (days)</th><th>Band</th><th>Application home</th><th>What the challenge does with it</th></tr>
+    <tr><td><span class="pill">G6 M1</span> Ratios &amp; Unit Rates (35)</td><td>5/6</td><td><b>Uniforms</b> (ratio, %) + <b>St. Hubert's</b> (unit rate)</td><td>Split: Uniforms = vote-share ratio/percent; St. Hubert's = unit rate on adoption data</td></tr>
+    <tr><td><span class="pill">G6 M5</span> Area, Surface, Volume (25)</td><td>5/6</td><td><b>Gardens</b></td><td>Bed measurement, area by decomposition, plants-per-bed</td></tr>
+    <tr><td><span class="pill">G6 M6</span> Statistics (25)</td><td>5/6</td><td><b>Uniforms</b> (intro) → <b>St. Hubert's</b> (retrieve)</td><td>Vote/survey data displays &amp; summary; St. H re-surfaces + adds line graph</td></tr>
+    <tr><td><span class="pill">G7 M1</span> Ratios &amp; Prop. Relationships (30)</td><td>7/8</td><td><b>Uniforms</b> (early) + <b>St. Hubert's</b> (proper)</td><td>Split: Uniforms = weighted scoring; St. H = adoption-rate-vs-intake proportionality</td></tr>
+    <tr><td><span class="pill">G7 M4</span> Percent &amp; Prop. Relationships (25)</td><td>7/8</td><td><b>Lunch</b> (proposed) — light touch in Uniforms</td><td>Markup/discount/%-change fits a budget/commerce challenge better</td></tr>
+    <tr><td><span class="pill">G7 M5 / G8 M6</span> Statistics &amp; bivariate (25)</td><td>7/8</td><td><b>Uniforms</b> (sampling) + <b>St. Hubert's</b> (distributions, scatter)</td><td>Uniforms = sampling; St. H = distributions &amp; association</td></tr>
+  </table>
+
+  <p class="foot">Feasibility, counted your way (math Rosenshine blocks, not self-reported challenge weeks): each band needs ~6–16 math blocks across its run — roughly one math block every 3–5 days at 1 block/day. Math volume is <b>not</b> the binding constraint. The real constraint is <b>ordering</b>: the daily Eureka sequence must deliver a module's instruction before the challenge applies it (e.g. G6 M1 unit rate must land before St. Hubert's adoption-rate block). Complementary blocks that can share a 2-block day: Gardens geometry + a ratio block; St. Hubert's stats + geometry.</p>
+</div>
+</body>
+</html>

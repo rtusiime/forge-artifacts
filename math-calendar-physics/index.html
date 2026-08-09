@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Forge Math Calendar Physics",
+  "schemaVersion": 1,
+  "description": "Forge fall math dependency-checked calendar: every math block from Uniforms/Gardens/St. Hubert's laid on a staggered per-band calendar, each checked against the SAP prerequisite graph. Flags the percent-before-unit-rate and proportion-before-intro inversions plus the Eureka-pacing collision.",
+  "mcpTools": [],
+  "mcpServerNames": []
+}
+</script>
+<html lang="en"><head>
+<meta name="robots" content="noindex, nofollow"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Forge Fall Math — Dependency-Checked Calendar</title>
+<style>
+:root{--ratio:#cdbade;--ratioT:#5b3d80;--stats:#e6b0b0;--statsT:#8a2f2f;--geo:#b3cbe6;--geoT:#234a73;--number:#f2e2a2;--numberT:#7a6410;--ink:#1f2430;--mut:#5b6472;--line:#e2e6ee;--bg:#f6f7fb;--bad:#c62f22;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:26px 18px 60px}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:23px;margin:0 0 3px}.sub{color:var(--mut);margin:0 0 18px;font-size:13px}
+h2{font-size:16px;margin:30px 0 4px}.h2n{font-size:12px;color:var(--mut);margin:0 0 12px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px;font-size:12px}
+.legend span{padding:3px 9px;border-radius:14px;font-weight:600}
+.lg-ratio{background:var(--ratio);color:var(--ratioT)}.lg-stats{background:var(--stats);color:var(--statsT)}
+.lg-geo{background:var(--geo);color:var(--geoT)}.lg-number{background:var(--number);color:var(--numberT)}
+.lg-bad{background:#fff;color:var(--bad);border:2px solid var(--bad)}
+.cal{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+table{border-collapse:collapse;width:100%;min-width:900px}
+th,td{border:1px solid var(--line);padding:5px 6px;vertical-align:top}
+th{background:#eef1f6;font-size:11px;color:var(--mut);font-weight:700;position:sticky;top:0}
+th.wk{width:58px;text-align:center}
+td.chlab{font-weight:700;font-size:12px;white-space:nowrap;background:#fafbfd}
+.chip{display:block;font-size:11px;padding:3px 6px;border-radius:7px;margin:2px 0;line-height:1.25}
+.chip b{font-weight:700}.chip small{opacity:.72}
+.c-ratio{background:var(--ratio);color:var(--ratioT)}.c-stats{background:var(--stats);color:var(--statsT)}
+.c-geo{background:var(--geo);color:var(--geoT)}.c-number{background:var(--number);color:var(--numberT)}
+.bad{outline:2px solid var(--bad);outline-offset:-2px}
+.bad::after{content:" ⚠";color:var(--bad);font-weight:800}
+.start{background:repeating-linear-gradient(45deg,#f7f8fb,#f7f8fb 6px,#eef1f6 6px,#eef1f6 12px)}
+.vtable{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:8px}
+.vtable th,.vtable td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.vtable th{background:#eef1f6;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut)}
+.tagB{color:var(--bad);font-weight:700}.tagA{color:#8a6d1a;font-weight:700}
+.verdict{background:#fff;border:1px solid var(--line);border-left:4px solid var(--ratioT);border-radius:10px;padding:14px 16px;margin:10px 0}
+.verdict b{color:var(--ink)}
+.foot{font-size:12px;color:var(--mut);margin-top:22px;border-top:1px solid var(--line);padding-top:10px}
+code{background:#eef1f6;padding:0 4px;border-radius:4px;font-size:12px}
+</style></head><body><div class="wrap">
+<h1>Forge Fall Math — dependency-checked calendar</h1>
+<p class="sub">Every math block laid on one shared calendar per grade band, staggered (Uniforms + Gardens from wk 1, St. Hubert's from wk ~6), ~1–2 blocks/day. Each lesson checked against the SAP prerequisite graph (spine <code>spine_math.json</code>, cross-confirmed on the Learning Commons MCP). <b>⚠ = a grade-6+ prerequisite is taught later than the lesson that needs it.</b> 2026-07-20.</p>
+
+<div class="legend">
+  <span class="lg-ratio">Ratio/Rate/Prop</span><span class="lg-stats">Data/Stats</span>
+  <span class="lg-geo">Geometry/Measure</span><span class="lg-number">Number/Fluency</span>
+  <span class="lg-bad">⚠ dependency broken</span>
+</div>
+
+<h2>5/6 band</h2>
+<p class="h2n">Intake credit ≤ grade 4. Grade-5 prereqs assumed carried by the daily Eureka block (not shown). St. Hubert's starts wk 6.</p>
+<div class="cal"><table>
+<tr><th class="wk">wk</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th></tr>
+<tr><td class="chlab">Uniforms</td>
+ <td><span class="chip c-ratio"><b>1.B.1/2</b> 6.RP.A.1 <small>ratio</small></span><span class="chip c-ratio bad"><b>1.B.3</b> 6.RP.A.3 <small>percent</small></span><span class="chip c-stats bad"><b>1.C.1</b> 6.SP.B.4 <small>bar graph</small></span></td>
+ <td></td><td></td><td></td><td></td><td></td>
+ <td><span class="chip c-stats bad"><b>4.C.2</b> 6.SP.B.5</span><span class="chip c-stats bad"><b>4.D.1</b> 6.SP.B.4/5</span></td>
+ <td></td>
+ <td><span class="chip c-number bad"><b>5.B.1</b> 6.NS.B.3</span><span class="chip c-stats bad"><b>5.C.1</b> 6.SP.B.5</span><span class="chip c-stats bad"><b>5.C.2</b> 6.SP.A.3</span></td>
+ <td></td>
+ <td><span class="chip c-ratio"><b>6.D.1</b> 6.RP.A.3</span><span class="chip c-ratio bad"><b>6.D.2</b> 7.RP.A.3 <small>stretch</small></span></td>
+ <td></td></tr>
+<tr><td class="chlab">Gardens</td>
+ <td><span class="chip c-geo"><b>1.A.3</b> 5.MD.A.1</span><span class="chip c-geo"><b>1.B.1</b> 6.G.A.1</span><span class="chip c-geo"><b>1.B.2</b> 5.G.A.1</span></td>
+ <td></td><td></td><td></td>
+ <td><span class="chip c-geo"><b>4.F</b> 6.G.A.1</span><span class="chip c-ratio"><b>4.F</b> 6.RP.A.1/<b>A.2</b> <small>apply</small></span></td>
+ <td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td class="chlab">St. Hubert's</td>
+ <td class="start"></td><td class="start"></td><td class="start"></td><td class="start"></td><td class="start"></td>
+ <td><span class="chip c-stats bad"><b>1.A.2/B.1</b> 6.SP.B.4 <small>displays</small></span><span class="chip c-ratio"><b>1.C.2</b> <b>6.RP.A.2</b> <small>unit rate INTRO</small></span><span class="chip c-ratio bad"><b>1.C.1/D.2</b> 7.RP.A.3 <small>over-tag</small></span></td>
+ <td></td><td></td><td></td>
+ <td><span class="chip c-stats bad"><b>4.C.2</b> 6.SP.B.5</span></td>
+ <td></td><td></td></tr>
+</table></div>
+
+<h2>7/8 band</h2>
+<p class="h2n">Intake credit ≤ grade 6. St. Hubert's starts wk 7.</p>
+<div class="cal"><table>
+<tr><th class="wk">wk</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>13</th></tr>
+<tr><td class="chlab">Uniforms</td>
+ <td><span class="chip c-ratio"><b>1.B.1</b> 6.RP.A.3 <small>review</small></span></td><td></td>
+ <td><span class="chip c-stats bad"><b>2.C.1</b> 8.SP.A.1 <small>scatter</small></span></td><td></td>
+ <td><span class="chip c-ratio bad"><b>3.C.1</b> 7.RP.A.3 <small>weighted</small></span></td><td></td>
+ <td><span class="chip c-ratio"><b>4.B.1</b> 7.RP.A.3</span></td><td></td>
+ <td><span class="chip c-number bad"><b>5.A.1</b> 7.NS.A.3</span><span class="chip c-stats bad"><b>5.C.1</b> 7.SP.A.1</span><span class="chip c-ratio"><b>5.C.2</b> 7.RP.A.3</span></td>
+ <td></td><td></td><td></td><td></td></tr>
+<tr><td class="chlab">St. Hubert's</td>
+ <td class="start"></td><td class="start"></td><td class="start"></td><td class="start"></td><td class="start"></td><td class="start"></td>
+ <td><span class="chip c-stats"><b>1.A.3</b> 7.SP.B.3</span><span class="chip c-stats bad"><b>1.A.4</b> 8.SP.A.1/2</span><span class="chip c-ratio bad"><b>1.B.1</b> <b>7.RP.A.2</b> INTRO</span></td>
+ <td><span class="chip c-stats"><b>2.D.2</b> 7.SP.B.3</span></td><td></td><td></td>
+ <td><span class="chip c-ratio bad"><b>4.A.2</b> 7.RP.A.2</span><span class="chip c-ratio"><b>4.A.1</b> 7.RP.A.3</span></td>
+ <td><span class="chip c-geo"><b>5.B.1</b> 7.G.A.1</span><span class="chip c-ratio bad"><b>5.B.2</b> 7.RP.A.2</span></td>
+ <td></td></tr>
+</table></div>
+
+<h2>The dependency breaks, split two ways</h2>
+<table class="vtable">
+<tr><th>#</th><th>Break</th><th>Type</th><th>Reading</th></tr>
+<tr><td>1</td><td><b>Percent before unit rate (5/6).</b> Uniforms teaches percent <code>6.RP.A.3</code> in wk 1; its SAP prereq <code>6.RP.A.2</code> (unit rate) isn't taught until wk 5–6 (Gardens applies it, St. Hubert's 1.C.2 introduces it).</td><td class="tagB">MUST FIX (in-challenge inversion)</td><td>4–5 weeks early. St. Hubert's <em>can't</em> supply it in time — it starts wk 6. So unit rate has to move into Uniforms, before percent.</td></tr>
+<tr><td>2</td><td><b>Proportion used before intro (7/8).</b> Uniforms uses <code>7.RP.A.3</code> (weighted scoring) wk 5; <code>7.RP.A.2</code> (proportionality) isn't introduced until St. Hubert's wk 7.</td><td class="tagB">MUST FIX (in-challenge inversion)</td><td>Uniforms needs a light 7.RP.A.2 beat before 3.C.1, or St. Hubert's owns proportion and Uniforms' weighting is reframed as non-proportional.</td></tr>
+<tr><td>3</td><td><b>Over-reach tags (5/6).</b> St. Hubert's 1.C.1 / 1.D.2 tagged <code>7.RP.A.3</code>, whose prereq <code>7.RP.A.2</code> is never taught in 5/6.</td><td class="tagB">MUST FIX (retag)</td><td>The work is really <code>6.RP.A.2/6.RP.A.3</code> (in-band). Retag down — resolves the break, and 7/8 already owns real 7.RP.A.3.</td></tr>
+<tr><td>4</td><td><b>Stats foundation never taught.</b> Every display/summary lesson (<code>6.SP.B.4/B.5</code>) rides on <code>6.SP.A.1/A.2</code> (statistical question, distribution center/spread) — taught nowhere in the challenges.</td><td class="tagA">EUREKA-TIMING</td><td>This belongs in the daily Eureka block (G6 M6). <b>But</b> Eureka pacing puts M6 Statistics in the <em>3rd trimester</em> — the fall challenges need it in the fall. Pacing collision (see verdict).</td></tr>
+<tr><td>5</td><td><b>Scatter on un-taught slope (7/8).</b> <code>8.SP.A.1/A.2</code> (Uniforms 2.C.1, St. H 1.A.4) ride on <code>8.EE.B.6</code> (slope), taught nowhere.</td><td class="tagA">EUREKA-TIMING / mitigated</td><td>Keep it association-only (no line equation); slope stays STRETCH. Both docs already lean this way. OK if held there.</td></tr>
+<tr><td>6</td><td><b>Assorted grade-level prereqs</b> — <code>6.NS.B.2</code> (÷ fluency), <code>7.RP.A.1</code>, <code>7.NS.A.1/A.2</code>, <code>7.SP.C.5</code> — used in challenges, taught nowhere in them.</td><td class="tagA">EUREKA-TIMING</td><td>Expected: challenges apply, daily Eureka teaches. The requirement is the Eureka sequence delivers each before the challenge week that spends it.</td></tr>
+</table>
+
+<div class="verdict">
+<b>Verdict — what the physics decides (not taste):</b><br>
+① <b>Unit rate (6.RP.A.2) must be introduced in Uniforms, before percent</b> — a new lesson between 1.B.2 (ratio) and 1.B.3 (percent), because the SAP chain is <code>6.RP.A.1 → 6.RP.A.2 → 6.RP.A.3.c</code> and the stagger makes St. Hubert's (wk 6) too late to feed Uniforms' wk-1 percent. St. Hubert's 1.C.2 then becomes a <em>retrieval/apply</em> on adoption data, not the intro. (This reverses what I told you two turns ago — the graph + calendar override my earlier guess.)<br>
+② <b>The biggest risk isn't inside the challenges — it's the Eureka pacing.</b> Your challenges front-load statistics and ratios into the fall; standard Eureka pacing (the chart you sent) puts G6 M6 Statistics and much of the ratio depth in trimesters 2–3. If the daily math block runs stock Eureka order, the prerequisites arrive <em>after</em> the challenges spend them. The daily sequence has to be re-ordered to match the challenge calendar — that's the real "does it close" question.
+</div>
+
+<p class="foot"><b>Model &amp; assumptions (so you can shred them):</b> act→week is linear within each challenge (act k ≈ start + (k−1)·duration/6); durations Uniforms 12–13 wk, Gardens 8, St. Hubert's 8; St. Hubert's start wk 6 (5/6) / wk 7 (7/8) per your "≈5 weeks into Uniforms." Intake credit ≤ grade 4 (5/6) / ≤ grade 6 (7/8). Prereqs at whole-standard grain (parent ∪ lettered subs) from SAP. Exact weeks are approximate; the <em>order</em> violations (1–3) hold regardless of the week mapping. Grade-5 prereqs treated as daily-Eureka/intake, not challenge bugs.</p>
+</div></body></html>

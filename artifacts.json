@@ -9,9 +9,51 @@
     {
       "slug": "decouple-math",
       "title": "Decouple Math",
-      "summary": "The full illustrated walkthrough making the case for decoupling math placement from grade level — the team-facing version.",
+      "summary": "The full illustrated walkthrough making the case for decoupling math placement from grade level — the team-facing version, backed by the NJSLS year-gap and IES practice guide.",
       "tags": ["math", "scheduling", "strategy"],
       "updated": "2026-08-09"
+    },
+    {
+      "slug": "decision-playbook",
+      "title": "The Decision Playbook",
+      "summary": "How to decide well when the data is cheap — and when it isn't. A mechanism-vs-track-record rule, a named-traps table, and a run-before-you-litigate checklist.",
+      "tags": ["playbook", "decision-making", "strategy"],
+      "updated": "2026-07-16"
+    },
+    {
+      "slug": "math-threads-map",
+      "title": "Fall Math Threads Map",
+      "summary": "What each challenge actually teaches, in lesson order and tagged to the spine — Uniforms, St. Hubert's, and Gardens mapped across grade bands.",
+      "tags": ["math", "curriculum", "standards"],
+      "updated": "2026-07-20"
+    },
+    {
+      "slug": "math-calendar-physics",
+      "title": "Fall Math — Dependency-Checked Calendar",
+      "summary": "Every math block on one staggered calendar per grade band, each lesson checked against the SAP prerequisite graph so nothing is taught before its prerequisites.",
+      "tags": ["math", "scheduling", "curriculum"],
+      "updated": "2026-07-20"
+    },
+    {
+      "slug": "math-edit-list",
+      "title": "Fall Math — Prescriptive Edit List",
+      "summary": "Lesson-by-lesson edits for Fall math: every prerequisite either taught in-challenge or flagged as genuine intake, sourced to the SAP prerequisite graph.",
+      "tags": ["math", "curriculum"],
+      "updated": "2026-07-20"
+    },
+    {
+      "slug": "standard-lesson-lookup",
+      "title": "Standard → Exemplar Lesson Lookup",
+      "summary": "Pick a standard (a spine node) and get every IM and Eureka lesson that teaches it. Interactive lookup across Grades 5–8 math.",
+      "tags": ["math", "standards", "tool"],
+      "updated": "2026-07-21"
+    },
+    {
+      "slug": "rebalancing-calendar",
+      "title": "Self-Rebalancing Lesson Calendar",
+      "summary": "Drag any lesson to a new day and everything downstream re-solves to keep the scheduling rules true, moving as little as possible. Interactive proof of concept.",
+      "tags": ["scheduling", "tool", "proof-of-concept"],
+      "updated": "2026-07-16"
     }
   ]
 }

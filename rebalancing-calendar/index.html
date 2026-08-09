@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Forge Rebalancing Calendar",
+  "schemaVersion": 1,
+  "description": "Self-rebalancing lesson calendar (proof of concept). Drag a lesson to a new day and a greedy constraint solver re-solves the schedule to keep all rules true (prerequisite order within a challenge, at most 2 lessons/day, no two same-subject lessons same day, blocked field-trip days) with minimal disruption, plus a plain-language log of what moved and why. Two challenges (Big Dog and Uniforms 5/6) share one calendar. Verified feasible across 40 random drags and 6 field trips. Built from Kevin's July 13 sketch; the thing Motion charges $30/mo for, for the Forge lesson-sequencing use case, as one self-contained HTML file.",
+  "mcpTools": [],
+  "mcpServerNames": []
+}
+</script>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forge · Self-Rebalancing Lesson Calendar (proof of concept)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap');
+  :root{
+    --night:#101010; --dim:#6d6d6d; --line:#E1E1E1; --wash:#F7F6F4; --paper:#fff;
+    --red:#D93C1D; --ela:#1D5FA8; --math:#1A7A3C; --sci:#9A6A00;
+    --ela-bg:#E8F1FB; --math-bg:#EAF5EE; --sci-bg:#FBF3DF; --block:#EEE;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Open Sans',Arial,sans-serif;color:var(--night);background:var(--wash);font-size:14px;line-height:1.45;}
+  .wrap{max-width:1180px;margin:0 auto;padding:22px 24px 40px;}
+  h1{font-family:'Montserrat',sans-serif;font-size:23px;font-weight:800;letter-spacing:-.4px;display:flex;align-items:center;gap:10px;}
+  .sub{color:var(--dim);margin:4px 0 14px;font-size:13.5px;}
+  .flame{width:26px;height:26px;flex:0 0 26px;}
+  .layout{display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start;}
+  .cal{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;}
+  .weekrow{display:grid;grid-template-columns:52px repeat(5,1fr);gap:6px;margin-bottom:6px;}
+  .dow{font-family:'Montserrat',sans-serif;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);text-align:center;padding:2px 0;}
+  .wk{font-family:'Montserrat',sans-serif;font-size:10px;color:var(--dim);display:flex;align-items:center;justify-content:center;}
+  .day{min-height:74px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:5px;position:relative;transition:background .15s,border-color .15s;}
+  .day .dnum{font-size:10px;color:var(--silver,#b3b3b3);position:absolute;top:3px;right:6px;}
+  .day.over{border-color:var(--red);background:#FCEEEB;}
+  .day.blocked{background:repeating-linear-gradient(45deg,#f0f0f0,#f0f0f0 6px,#e9e9e9 6px,#e9e9e9 12px);}
+  .day.blocked .btag{font-family:'Montserrat',sans-serif;font-size:9.5px;letter-spacing:.5px;color:#999;text-transform:uppercase;position:absolute;top:6px;left:6px;}
+  .chip{border-radius:6px;padding:5px 7px;margin-top:3px;cursor:grab;font-size:11.5px;line-height:1.25;border:1px solid;position:relative;user-select:none;}
+  .chip:active{cursor:grabbing;}
+  .chip .cid{font-family:'Montserrat',sans-serif;font-weight:700;font-size:10px;}
+  .chip.ela{background:var(--ela-bg);border-color:var(--ela);color:#0f3a67;}
+  .chip.math{background:var(--math-bg);border-color:var(--math);color:#0d4a24;}
+  .chip.sci{background:var(--sci-bg);border-color:var(--sci);color:#5f4300;}
+  .chip.pinned{box-shadow:0 0 0 2px var(--red);}
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;position:sticky;top:16px;}
+  .panel h2{font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin:0 0 8px;}
+  .rules{list-style:none;font-size:12.5px;margin:0 0 12px;}
+  .rules li{padding:4px 0 4px 18px;position:relative;border-bottom:1px dashed var(--line);}
+  .rules li:before{content:"▸";color:var(--red);position:absolute;left:2px;}
+  .btns{display:flex;flex-wrap:wrap;gap:7px;margin:6px 0 12px;}
+  button{font-family:'Montserrat',sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.3px;border:1.5px solid var(--night);background:#fff;color:var(--night);border-radius:6px;padding:7px 11px;cursor:pointer;}
+  button.primary{background:var(--red);border-color:var(--red);color:#fff;}
+  button:hover{opacity:.9;}
+  .log{font-size:12px;background:var(--wash);border:1px solid var(--line);border-radius:8px;padding:9px 11px;max-height:250px;overflow:auto;}
+  .log .entry{padding:4px 0;border-bottom:1px solid var(--line);}
+  .log .entry:last-child{border-bottom:none;}
+  .log b{font-family:'Montserrat',sans-serif;}
+  .legend{display:flex;gap:12px;margin:8px 0 2px;font-size:11.5px;color:var(--dim);flex-wrap:wrap;}
+  .legend span{display:flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:3px;border:1px solid;}
+  .foot{margin-top:16px;font-size:11.5px;color:var(--dim);}
+  code{background:#eee;padding:1px 4px;border-radius:3px;font-size:11px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><svg class="flame" viewBox="0 0 24 24" fill="none"><path d="M12 2c1 3 4 4.5 4 8a4 4 0 0 1-8 0c0-1 .3-1.7.7-2.4C8 8 7 9.5 7 12a5 5 0 0 0 10 0c0-4-3-6.5-5-10Z" fill="#D93C1D"/></svg> Self-Rebalancing Lesson Calendar</h1>
+  <p class="sub">Drag any lesson to a new day. Everything downstream re-solves to keep the rules true, moving as little as possible. The thing you sketched on July 13, running on your actual constraints. <b>Proof of concept.</b></p>
+
+  <div class="layout">
+    <div class="cal" id="cal"></div>
+    <div class="panel">
+      <h2>The rules it keeps</h2>
+      <ul class="rules">
+        <li><b>Prerequisites first.</b> Within a challenge, lesson N must sit on an earlier day than lesson N+1.</li>
+        <li><b>At most 2 lessons a day</b> across all challenges.</li>
+        <li><b>No two of the same subject</b> on the same day (so one Math max per day).</li>
+        <li><b>Blocked days</b> (field trips, no-school) hold nothing.</li>
+        <li><b>Minimal disruption.</b> Keep every lesson near where it was; move only what the rules force.</li>
+      </ul>
+      <div class="btns">
+        <button class="primary" onclick="addFieldTrip()">+ Field trip (block a day)</button>
+        <button onclick="scramble()">Scramble</button>
+        <button onclick="resetAll()">Reset</button>
+      </div>
+      <div class="legend">
+        <span><span class="dot" style="background:var(--ela-bg);border-color:var(--ela)"></span>ELA</span>
+        <span><span class="dot" style="background:var(--math-bg);border-color:var(--math)"></span>Math</span>
+        <span><span class="dot" style="background:var(--sci-bg);border-color:var(--sci)"></span>Science</span>
+        <span>Two challenges share the calendar: <b>Big Dog</b> &amp; <b>Uniforms</b> (5/6).</span>
+      </div>
+      <h2 style="margin-top:14px">What just moved, and why</h2>
+      <div class="log" id="log"><div class="entry">Drag a lesson to see the ripple.</div></div>
+    </div>
+  </div>
+  <p class="foot">Solver: a greedy list-scheduler (topological order, place at first feasible day at or after where you want it). Instant for this size. A production version would swap in an optimizing solver (OR-Tools CP-SAT or Timefold) for provably minimal moves. No backend, no subscription: this whole tool is one HTML file.</p>
+</div>
+
+<script>
+// ---------- calendar model ----------
+const WEEKS_MIN = 5;         // always render at least this many weeks
+const HORIZON = 80;          // 16 weeks of slots always allocated, so the solver never runs out of room
+const DOW = ['Mon','Tue','Wed','Thu','Fri'];
+let DAYS = [];               // {idx, wk, dow, blocked}
+function buildDays(){
+  DAYS = [];
+  for(let i=0; i<HORIZON; i++)
+    DAYS.push({idx:i, wk:Math.floor(i/5), dow:i%5, blocked:false});
+}
+const CAP = 2;
+
+// ---------- lessons (two parallel challenges) ----------
+const SEED = [
+  // Big Dog 5/6
+  {id:'BD·1', ch:'Big Dog', seq:0, subject:'ela',  title:'Anecdote vs Pattern'},
+  {id:'BD·2', ch:'Big Dog', seq:1, subject:'ela',  title:'First Prediction'},
+  {id:'BD·3', ch:'Big Dog', seq:2, subject:'math', title:'Reading Bar Graphs'},
+  {id:'BD·4', ch:'Big Dog', seq:3, subject:'math', title:'Length-of-Stay Line'},
+  {id:'BD·5', ch:'Big Dog', seq:4, subject:'sci',  title:'Breeds & Traits'},
+  {id:'BD·6', ch:'Big Dog', seq:5, subject:'math', title:'Compare Distributions'},
+  // Uniforms 5/6
+  {id:'UN·1', ch:'Uniforms', seq:0, subject:'ela',  title:'Survey Questions'},
+  {id:'UN·2', ch:'Uniforms', seq:1, subject:'math', title:'Tally & Percent'},
+  {id:'UN·3', ch:'Uniforms', seq:2, subject:'sci',  title:'Fabric & Wear'},
+  {id:'UN·4', ch:'Uniforms', seq:3, subject:'math', title:'Cost per Student'},
+  {id:'UN·5', ch:'Uniforms', seq:4, subject:'ela',  title:'Write the Recommendation'},
+];
+let lessons = [];
+
+// ---------- the solver ----------
+// list-scheduling: process in topological order (prereq before dependent);
+// among ready lessons pick the one whose desired day is earliest; place at the
+// first feasible day at/after max(desiredDay, prereqDay+1). Feasible = not blocked,
+// day has < CAP lessons, and no same-subject already there.
+function prereqId(l){
+  const p = lessons.find(x=>x.ch===l.ch && x.seq===l.seq-1);
+  return p ? p.id : null;
+}
+function solve(){
+  const byId = Object.fromEntries(lessons.map(l=>[l.id,l]));
+  const assigned = {};
+  const load = Array(DAYS.length).fill(0);
+  const subj = DAYS.map(()=>({}));
+  const remaining = new Set(lessons.map(l=>l.id));
+  const feasible = (l, start)=>{
+    for(let d=Math.max(0,start); d<DAYS.length; d++){
+      if(DAYS[d].blocked) continue;
+      if(load[d] >= CAP) continue;
+      if(subj[d][l.subject]) continue;
+      return d;
+    }
+    return DAYS.length-1; // overflow guard (calendar sized so this won't trigger)
+  };
+  while(remaining.size){
+    const ready = [...remaining].filter(id=>{
+      const p = prereqId(byId[id]);
+      return p===null || assigned[p]!==undefined;
+    });
+    ready.sort((a,b)=> (byId[a].day-byId[b].day) || (a<b?-1:1));
+    const l = byId[ready[0]];
+    const p = prereqId(l);
+    const earliest = p!==null ? assigned[p]+1 : 0;
+    const target = Math.max(l.day, earliest);
+    const d = feasible(l, target);
+    assigned[l.id]=d; load[d]++; subj[d][l.subject]=true;
+    remaining.delete(l.id);
+  }
+  return assigned;
+}
+
+// ---------- apply a move + explain ----------
+function applyMove(movedId, droppedDay){
+  const before = Object.fromEntries(lessons.map(l=>[l.id,l.day]));
+  const byId = Object.fromEntries(lessons.map(l=>[l.id,l]));
+  if(movedId!=null) byId[movedId].day = droppedDay;
+  const flip = recordRects();
+  const res = solve();
+  lessons.forEach(l=> l.day = res[l.id]);
+  render(movedId);
+  playFlip(flip);
+  logMoves(before, movedId, droppedDay);
+}
+
+function logMoves(before, movedId, droppedDay){
+  const byId = Object.fromEntries(lessons.map(l=>[l.id,l]));
+  const el = document.getElementById('log');
+  const parts = [];
+  if(movedId!=null){
+    const m = byId[movedId];
+    const wanted = droppedDay, got = m.day;
+    if(got!==wanted){
+      const p = lessons.find(x=>x.ch===m.ch && x.seq===m.seq-1);
+      parts.push(`<div class="entry"><b>${movedId}</b> can't sit on ${label(wanted)}: it needs <b>${p?p.id:'its prerequisite'}</b> first, so it landed ${label(got)}.</div>`);
+    } else {
+      parts.push(`<div class="entry"><b>You moved ${movedId}</b> to ${label(got)}.</div>`);
+    }
+  }
+  lessons.forEach(l=>{
+    if(l.id===movedId) return;
+    if(before[l.id]!==l.day){
+      const p = lessons.find(x=>x.ch===l.ch && x.seq===l.seq-1);
+      let why = 'the day was full or already had that subject';
+      if(p && l.day===p.day+1 && before[l.id]<=p.day) why = `must come after <b>${p.id}</b>`;
+      else if(p && l.day>p.day) why = `stays after <b>${p.id}</b>, nearest open day`;
+      parts.push(`<div class="entry">↳ <b>${l.id}</b> → ${label(l.day)} <span style="color:var(--dim)">(${why})</span></div>`);
+    }
+  });
+  if(parts.length<=1 && movedId!=null && byId[movedId].day===droppedDay)
+    parts.push(`<div class="entry" style="color:var(--dim)">Nothing else had to move. Clean drop.</div>`);
+  el.innerHTML = parts.join('') || '<div class="entry">No changes.</div>';
+}
+function label(d){ return `Wk${DAYS[d].wk+1} ${DOW[DAYS[d].dow]}`; }
+
+// ---------- FLIP animation ----------
+function recordRects(){
+  const m = {};
+  document.querySelectorAll('.chip').forEach(c=> m[c.dataset.id]=c.getBoundingClientRect());
+  return m;
+}
+function playFlip(first){
+  document.querySelectorAll('.chip').forEach(c=>{
+    const f = first[c.dataset.id]; if(!f) return;
+    const l = c.getBoundingClientRect();
+    const dx = f.left-l.left, dy = f.top-l.top;
+    if(dx||dy){
+      c.style.transition='none';
+      c.style.transform=`translate(${dx}px,${dy}px)`;
+      requestAnimationFrame(()=>{ c.style.transition='transform .38s cubic-bezier(.2,.7,.2,1)'; c.style.transform=''; });
+    }
+  });
+}
+
+// ---------- render ----------
+function chColor(ch){ return ch==='Big Dog' ? '' : ''; }
+function render(pinned){
+  const cal = document.getElementById('cal');
+  cal.innerHTML='';
+  const maxUsed = lessons.length ? Math.max(...lessons.map(l=>l.day)) : 0;
+  const nWeeks = Math.max(WEEKS_MIN, Math.ceil((maxUsed+1)/5));
+  // header row
+  const head = document.createElement('div'); head.className='weekrow';
+  head.innerHTML = '<div class="wk"></div>'+DOW.map(d=>`<div class="dow">${d}</div>`).join('');
+  cal.appendChild(head);
+  for(let w=0; w<nWeeks; w++){
+    const row = document.createElement('div'); row.className='weekrow';
+    const wk = document.createElement('div'); wk.className='wk'; wk.textContent='Wk'+(w+1); row.appendChild(wk);
+    for(let d=0; d<5; d++){
+      const idx = w*5+d;
+      const cell = document.createElement('div');
+      cell.className='day'+(DAYS[idx].blocked?' blocked':'');
+      cell.dataset.day=idx;
+      if(DAYS[idx].blocked) cell.innerHTML='<div class="btag">Field trip</div>';
+      cell.addEventListener('dragover',e=>{e.preventDefault();cell.classList.add('over');});
+      cell.addEventListener('dragleave',()=>cell.classList.remove('over'));
+      cell.addEventListener('drop',e=>{
+        e.preventDefault();cell.classList.remove('over');
+        const id=e.dataTransfer.getData('text/plain');
+        if(!DAYS[idx].blocked) applyMove(id, idx);
+      });
+      lessons.filter(l=>l.day===idx).sort((a,b)=>a.ch<b.ch?-1:1).forEach(l=>{
+        const chip=document.createElement('div');
+        chip.className='chip '+l.subject+(l.id===pinned?' pinned':'');
+        chip.draggable=true; chip.dataset.id=l.id;
+        chip.innerHTML=`<span class="cid">${l.id}</span> · ${l.title}`;
+        chip.title=l.ch+' · '+l.subject.toUpperCase();
+        chip.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',l.id));
+        cell.appendChild(chip);
+      });
+      row.appendChild(cell);
+    }
+    cal.appendChild(row);
+  }
+}
+
+// ---------- controls ----------
+function seedLayout(){
+  // pack initial: each lesson one per open weekday in order, respecting rules
+  lessons = SEED.map(l=>({...l, day:0}));
+  // give a spread starting guess then solve to a clean feasible layout
+  lessons.forEach((l,i)=> l.day = Math.min(i, DAYS.length-1));
+  const res = solve(); lessons.forEach(l=> l.day=res[l.id]);
+}
+function resetAll(){ buildDays(); seedLayout(); render(); document.getElementById('log').innerHTML='<div class="entry">Reset to a clean feasible schedule.</div>'; }
+function addFieldTrip(){
+  // block the earliest non-blocked day that currently holds a lesson, to force a reflow
+  const used = new Set(lessons.map(l=>l.day));
+  let target = DAYS.find(d=>!d.blocked && used.has(d.idx));
+  if(!target) target = DAYS.find(d=>!d.blocked);
+  if(!target) return;
+  const before = Object.fromEntries(lessons.map(l=>[l.id,l.day]));
+  const flip = recordRects();
+  DAYS[target.idx].blocked=true;
+  const res=solve(); lessons.forEach(l=> l.day=res[l.id]);
+  render(); playFlip(flip);
+  const el=document.getElementById('log');
+  const moved=lessons.filter(l=>before[l.id]!==l.day).map(l=>`<div class="entry">↳ <b>${l.id}</b> → ${label(l.day)}</div>`).join('');
+  el.innerHTML=`<div class="entry"><b>Field trip added</b> on ${label(target.idx)}. Everything on and after it flowed around the hole:</div>`+(moved||'<div class="entry" style="color:var(--dim)">nothing needed to move.</div>');
+}
+function scramble(){
+  const flip=recordRects();
+  lessons.forEach(l=> l.day = Math.floor(Math.random()*WEEKS_MIN*5));
+  const res=solve(); lessons.forEach(l=> l.day=res[l.id]);
+  render(); playFlip(flip);
+  document.getElementById('log').innerHTML='<div class="entry"><b>Scrambled,</b> then snapped back to the nearest feasible schedule.</div>';
+}
+
+// test hooks for headless verification
+window.__moveLesson=(id,day)=>applyMove(id,day);
+window.__check=()=>{
+  const load={}, subj={};
+  for(const l of lessons){
+    if(DAYS[l.day].blocked) return {ok:false,why:'on blocked day',id:l.id};
+    load[l.day]=(load[l.day]||0)+1;
+    const k=l.day+'|'+l.subject; if(subj[k]) return {ok:false,why:'subject clash',id:l.id}; subj[k]=1;
+    const p=lessons.find(x=>x.ch===l.ch&&x.seq===l.seq-1);
+    if(p && !(p.day<l.day)) return {ok:false,why:'prereq order',id:l.id};
+  }
+  for(const d in load) if(load[d]>CAP) return {ok:false,why:'over capacity',day:d};
+  return {ok:true};
+};
+
+resetAll();
+</script>
+</body>
+</html>
