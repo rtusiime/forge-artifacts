@@ -21,6 +21,13 @@
       "updated": "2026-07-16"
     },
     {
+      "slug": "audit-playbook",
+      "title": "The Lesson Audit Playbook",
+      "summary": "How we stand behind ~700 AI-written lessons without reading all 700 — the gates, the automated checks, the 4-minute human read, and the maintainer model.",
+      "tags": ["playbook", "curriculum", "quality"],
+      "updated": "2026-07-16"
+    },
+    {
       "slug": "math-threads-map",
       "title": "Fall Math Threads Map",
       "summary": "What each challenge actually teaches, in lesson order and tagged to the spine — Uniforms, St. Hubert's, and Gardens mapped across grade bands.",
