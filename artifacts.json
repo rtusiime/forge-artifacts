@@ -61,6 +61,13 @@
       "summary": "Drag any lesson to a new day and everything downstream re-solves to keep the scheduling rules true, moving as little as possible. Interactive proof of concept.",
       "tags": ["scheduling", "tool", "proof-of-concept"],
       "updated": "2026-07-16"
+    },
+    {
+      "slug": "spine-explorer",
+      "title": "Spine Explorer",
+      "summary": "Interactive map of the math prerequisite spine — search any standard, walk its prerequisites ← and unlocks →, and forge a 3–4 node strand you can share by link.",
+      "tags": ["math", "standards", "tool"],
+      "updated": "2026-08-09"
     }
   ]
 }
